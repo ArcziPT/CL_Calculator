@@ -6,16 +6,21 @@
 #define CL_CALCULATOR_CALCULATORCONFIG_H
 
 #include "RPN_Converter.h"
+#include <functional>
 #include "RPN_Calculator.h"
 
 class CalculatorConfig {
 public:
     CalculatorConfig();
 
+    //print info
+    void print_function_data(const std::string& name);
+
     //config
-    CalculatorConfig& set_function(const std::string& name, int args_num, double (*func_ptr)(const std::vector<double>&));
-    CalculatorConfig& set_operator(const std::string& op, double (*func_ptr)(const std::vector<double>&), int precedence, bool left_associativity);
+    CalculatorConfig& set_function(const std::string& name, int args_num, const std::function<double(const std::vector<double>&)>& func_ptr, bool dynamic = false, const std::string& info = "");
+    //CalculatorConfig& set_operator(const std::string& op, std::function<double(const std::vector<double>&)> func_ptr, int precedence, bool left_associativity, bool dynamic = false, const std::string& info = "");
     CalculatorConfig& remove_function(const std::string& name);
+    CalculatorConfig& set_var_mode(bool var_mode);
 
     //reset config
     CalculatorConfig& reset();
@@ -30,6 +35,8 @@ private:
     std::map<std::string, func_def> func_map;
     std::map<std::string, int> precedence;
     std::map<std::string, bool> left_associativity;
+    //std::map<std::string, bool> operators;
+    bool var_mode = false;
 };
 
 

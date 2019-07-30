@@ -17,7 +17,8 @@ enum Token_type{
     func,
     left_p,
     right_p,
-    op
+    op,
+    var
 };
 
 struct Token{
@@ -36,11 +37,12 @@ using RPN_ptr = std::unique_ptr<RPN>;
 class RPN_Converter {
 public:
     RPN_ptr convert(const std::string& input);
-    void config(const std::map<std::string, int>& precedence, const std::map<std::string, bool>& left_associativity);
+    void config(const std::map<std::string, int>& precedence, const std::map<std::string, bool>& left_associativity, bool var_mode);
 
 private:
     std::map<std::string, int> precedence;
     std::map<std::string, bool> left_associativity;
+    bool var_mode = false;
 
     std::vector<Token> get_tokens(const std::string& input);
     bool has_greater_precedence(const std::string& op1, const std::string& op2);  //does op1 has greater precedence?

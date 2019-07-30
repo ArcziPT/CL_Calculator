@@ -9,11 +9,13 @@ CalculatorConfig::CalculatorConfig() {
 }
 
 CalculatorConfig &
-CalculatorConfig::set_function(const std::string &name, int args_num, double (*func_ptr)(const std::vector<double> &)) {
+CalculatorConfig::set_function(const std::string &name, int args_num, const std::function<double(const std::vector<double>&)>& func_ptr, bool dynamic, const std::string& info) {
     if(!func_map.count(name)){
         func_def def;
         def.arg_num = args_num;
         def.func_ptr = func_ptr;
+        def.dynamic = dynamic;
+        def.info = info;
 
         func_map.insert(std::pair<std::string, func_def>(name, def));
 
@@ -26,13 +28,15 @@ CalculatorConfig::set_function(const std::string &name, int args_num, double (*f
     return *this;
 }
 
-CalculatorConfig &
-CalculatorConfig::set_operator(const std::string &op, double (*func_ptr)(const std::vector<double> &), int precedence,
-                               bool left_associativity) {
+/*CalculatorConfig &
+CalculatorConfig::set_operator(const std::string &op, std::function<double(const std::vector<double>&)> func_ptr, int precedence,
+                               bool left_associativity, bool dynamic, const std::string& info) {
     if(!func_map.count(op)){
         func_def def;
         def.arg_num = 2;
         def.func_ptr = func_ptr;
+        def.dynamic = dynamic;
+        def.info = info;
 
         func_map.insert(std::pair<std::string, func_def>(op, def));
         this->left_associativity.insert(std::pair<std::string, bool>(op, left_associativity));
@@ -48,7 +52,7 @@ CalculatorConfig::set_operator(const std::string &op, double (*func_ptr)(const s
     this->precedence[op] = precedence;
 
     return *this;
-}
+}*/
 
 CalculatorConfig &CalculatorConfig::remove_function(const std::string &name) {
     func_map.erase(name);
@@ -65,13 +69,13 @@ CalculatorConfig &CalculatorConfig::reset() {
 }
 
 CalculatorConfig &CalculatorConfig::apply(RPN_Converter &converter) {
-    converter.config(precedence, left_associativity);
+    converter.config(precedence, left_associativity, var_mode);
 
     return *this;
 }
 
 CalculatorConfig &CalculatorConfig::apply(RPN_Calculator &calculator) {
-    calculator.config(func_map);
+    calculator.config(func_map, var_mode);
 
     return *this;
 }
@@ -94,10 +98,38 @@ void CalculatorConfig::init_default() {
     };
 
     func_map = {
-            {"+", {2, &add}},
-            {"-", {2, &sub}},
-            {"/", {2, &div}},
-            {"*", {2, &mul}},
-            {"^", {2, &poww}}
+            {"+", {2, &default_func::d_add}},
+            {"-", {2, &default_func::d_sub}},
+            {"/", {2, &default_func::d_div}},
+            {"*", {2, &default_func::d_mul}},
+            {"^", {2, &default_func::d_pow}},
+            {"sin", {1, &default_func::d_sin}},
+            {"cos", {1, &default_func::d_cos}},
+            {"tg", {1, &default_func::d_tg}},
+            {"ctg", {1, &default_func::d_ctg}}
     };
+
+    var_mode = false;
+}
+
+CalculatorConfig &CalculatorConfig::set_var_mode(bool var_mode) {
+    this->var_mode = var_mode;
+
+    return *this;
+}
+
+void CalculatorConfig::print_function_data(const std::string &name) {
+    if(func_map.count(name) == 0){
+        std::cout<<"\""<<name<<"\" not defined\n";
+        return;
+    }
+
+    auto def = func_map[name];
+
+    if(!def.dynamic){
+        std::cout<<"\""<<name<<"\" is hardcoded function\n";
+        return;
+    }
+
+    std::cout<<def.info;
 }

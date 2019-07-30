@@ -4,6 +4,7 @@
 
 #include "RPN_Calculator.h"
 #include <stack>
+#include <functional>
 
 double RPN_Calculator::calculate(const RPN& rpn) {
     std::stack<double> stack;
@@ -13,6 +14,11 @@ double RPN_Calculator::calculate(const RPN& rpn) {
             case number:
                 stack.push(stod(token.val));
                 break;
+
+            case var:
+                std::cout<<"VAR: "<<token.val<<std::endl;
+                err = true;
+                return 0;
 
             case func:
             case op:
@@ -39,8 +45,9 @@ double RPN_Calculator::calculate(const RPN& rpn) {
     return stack.top();
 }
 
-void RPN_Calculator::config(const std::map<std::string, func_def>& func_map) {
+void RPN_Calculator::config(const std::map<std::string, func_def>& func_map, bool var_mode) {
     this->func_map = func_map;
+    this->var_mode = var_mode;
 }
 
 bool RPN_Calculator::error() {

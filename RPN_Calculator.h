@@ -11,18 +11,22 @@
 
 struct func_def{
     int arg_num;
-    double (*func_ptr)(const std::vector<double>&);
+    std::function<double(const std::vector<double>&)> func_ptr;
+
+    bool dynamic = false;
+    std::string info = "";
 };
 
 
 class RPN_Calculator {
 public:
     double calculate(const RPN& rpn);
-    void config(const std::map<std::string, func_def>& func_map);
+    void config(const std::map<std::string, func_def>& func_map, bool var_mode);
 
     bool error();
 
 private:
+    bool var_mode = false;
     bool err = false;
     std::map<std::string, func_def> func_map;
 };

@@ -16,6 +16,9 @@ RPN_ptr RPN_Converter::convert(const std::string &input) {
     auto tokens = get_tokens(input);
     for(auto& token : tokens){
         switch(token.type){
+            case var:
+                output_queue.push_back(token);
+                break;
             case number:
                 output_queue.push_back(token);
                 break;
@@ -92,7 +95,10 @@ std::vector<Token> RPN_Converter::get_tokens(const std::string &input) {
 
             if(it == input.end())
                 break;
-        }else if(*it != '(' and *it != ')' and precedence.count(std::string(1, *it)) == 0){
+        }else if(*it == ','){
+            it++;
+            continue;
+        }else if(*it != '(' and *it != ')' and precedence.count(std::string(1, *it)) == 0){ //not an operator
             while(it != input.end() and *it != '(' and *it != ')' and precedence.count(std::string(1, *it)) == 0){
                 func_stream << *it;
                 it++;
@@ -103,7 +109,7 @@ std::vector<Token> RPN_Converter::get_tokens(const std::string &input) {
 
             Token token;
             token.val = val;
-            token.type = Token_type::func;
+            token.type = Token_type ::func;
 
             tokens.push_back(token);
             func_stream.clear();
@@ -137,7 +143,8 @@ bool RPN_Converter::has_equal_precedence(const std::string &op1, const std::stri
     return  precedence[op1] == precedence[op2];
 }
 
-void RPN_Converter::config(const std::map<std::string, int>& precedence, const std::map<std::string, bool>& left_associativity) {
+void RPN_Converter::config(const std::map<std::string, int>& precedence, const std::map<std::string, bool>& left_associativity, bool var_mode) {
     this->left_associativity = left_associativity;
     this->precedence = precedence;
+    this->var_mode = var_mode;
 }
