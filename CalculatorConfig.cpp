@@ -8,20 +8,19 @@ CalculatorConfig::CalculatorConfig() {
     init_default();
 }
 
+//add function definition
 CalculatorConfig &
-CalculatorConfig::set_function(const std::string &name, int args_num, const std::function<double(const std::vector<double>&)>& func_ptr, bool dynamic, const std::string& info) {
-    if(!func_map.count(name)){
-        func_def def;
-        def.arg_num = args_num;
-        def.func_ptr = func_ptr;
-        def.dynamic = dynamic;
-        def.info = info;
+CalculatorConfig::set_function(const std::string &name, int args_num, const func_ptr_variant& func_ptr, bool dynamic, const std::string& info) {
 
+    //if function with this name not exist, create new definition and insert it
+    if(!func_map.count(name)){
+        func_def def{args_num, func_ptr, dynamic, info};
         func_map.insert(std::pair<std::string, func_def>(name, def));
 
         return *this;
     }
 
+    //replace old args_num and func_ptr
     func_map[name].arg_num = args_num;
     func_map[name].func_ptr = func_ptr;
 
@@ -80,6 +79,7 @@ CalculatorConfig &CalculatorConfig::apply(RPN_Calculator &calculator) {
     return *this;
 }
 
+//default config
 void CalculatorConfig::init_default() {
     left_associativity = {
         {"+", 1},
@@ -118,6 +118,7 @@ CalculatorConfig &CalculatorConfig::set_var_mode(bool var_mode) {
     return *this;
 }
 
+//prints dynamic function definition
 void CalculatorConfig::print_function_data(const std::string &name) {
     if(func_map.count(name) == 0){
         std::cout<<"\""<<name<<"\" not defined\n";

@@ -9,17 +9,15 @@
 #include <iostream>
 #include <vector>
 #include "RPN_Converter.h"
-#include "RPN_Calculator.h"
 
 class FunctionFactory {
 public:
-    FunctionFactory(RPN_Converter* converter, RPN_Calculator* calculator): calculator(calculator), converter(converter){};
+    FunctionFactory(RPN_Converter* converter): converter(converter){};
 
     CalcFunction* get_function(const std::string& func, int arg_num);
 
 private:
     RPN_Converter* converter;
-    RPN_Calculator* calculator;
 };
 
 

@@ -9,6 +9,10 @@
 #include <functional>
 #include "RPN_Calculator.h"
 
+/*
+ * it holds definitions of dynamic functions added during runtime and hardcoded function in func_map, precedence, associativity..
+ */
+
 class CalculatorConfig {
 public:
     CalculatorConfig();
@@ -17,7 +21,7 @@ public:
     void print_function_data(const std::string& name);
 
     //config
-    CalculatorConfig& set_function(const std::string& name, int args_num, const std::function<double(const std::vector<double>&)>& func_ptr, bool dynamic = false, const std::string& info = "");
+    CalculatorConfig& set_function(const std::string& name, int args_num, const func_ptr_variant& func_ptr, bool dynamic = false, const std::string& info = "");
     //CalculatorConfig& set_operator(const std::string& op, std::function<double(const std::vector<double>&)> func_ptr, int precedence, bool left_associativity, bool dynamic = false, const std::string& info = "");
     CalculatorConfig& remove_function(const std::string& name);
     CalculatorConfig& set_var_mode(bool var_mode);

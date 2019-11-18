@@ -11,6 +11,10 @@
 #include <memory>
 #include <map>
 
+/*
+ * converts infix notation to RPN
+ */
+
 //Token
 enum Token_type{
     number,

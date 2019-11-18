@@ -7,16 +7,19 @@
 
 
 #include <vector>
-#include <iostream>
 #include <memory>
 #include "RPN_Calculator.h"
 
-
+/*
+ * used to represent dynamic function and hold its data:
+ * -args_num
+ * -info
+ */
 class CalcFunction {
 public:
-    double operator()(const std::vector<double>& args);
+    std::unique_ptr<RPN> operator()(const std::vector<double>& args);
 
-    CalcFunction(std::unique_ptr<RPN> rpn, int arg_num, RPN_Calculator* calculator): rpn(std::move(rpn)), arg_num(arg_num), calculator(calculator){};
+    CalcFunction(std::unique_ptr<RPN> rpn, int arg_num): rpn(std::move(rpn)), arg_num(arg_num){};
     CalcFunction(const CalcFunction& calcFunction);
 
     std::string get_info();
@@ -24,8 +27,6 @@ public:
 private:
     std::unique_ptr<RPN> rpn;
     int arg_num;
-
-    RPN_Calculator* calculator;
 };
 
 

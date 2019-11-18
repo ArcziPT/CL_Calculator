@@ -14,6 +14,9 @@ RPN_ptr RPN_Converter::convert(const std::string &input) {
     std::stack<Token> operator_stack;
 
     auto tokens = get_tokens(input);
+
+    //actual algorithm converting tokens into rpn
+    //https://en.wikipedia.org/wiki/Reverse_Polish_notation
     for(auto& token : tokens){
         switch(token.type){
             case var:
@@ -69,6 +72,14 @@ RPN_ptr RPN_Converter::convert(const std::string &input) {
     return rpn;
 }
 
+/*
+ * change input into tokens:
+ * - numbers
+ * - functions
+ * - operators and parenthesis
+ *
+ * Ignores ','
+ */
 std::vector<Token> RPN_Converter::get_tokens(const std::string &input) {
     std::vector<Token> tokens;
 

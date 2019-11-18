@@ -8,7 +8,7 @@
 RPN_Converter converter;
 RPN_Calculator calculator;
 CalculatorConfig config;
-FunctionFactory factory(&converter, &calculator);
+FunctionFactory factory(&converter);
 
 
 void parse(const std::string& input){
@@ -37,7 +37,7 @@ void parse(const std::string& input){
                 int arg_num = stoi(strs[3]);
 
                 auto func = factory.get_function(strs[4], arg_num);
-                config.set_function(name, arg_num, *func, true, func->get_info()).apply(converter).apply(calculator);
+                config.set_function(name, arg_num, {*func}, true, func->get_info()).apply(converter).apply(calculator);
 
                 std::cout<<"\""<<name<<"\" defined\n";
 

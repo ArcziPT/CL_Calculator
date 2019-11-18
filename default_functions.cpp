@@ -5,6 +5,8 @@
 #include "default_functions.h"
 #include <cmath>
 
+#define M_PI 3.14159265358979323846
+
 double default_func::d_add(const std::vector<double>& args){
     return args[1] + args[0];
 }

@@ -4,8 +4,10 @@
 
 #include "CalcFunction.h"
 
-double CalcFunction::operator()(const std::vector<double> &args) {
-    for(auto& token : rpn->stack){
+std::unique_ptr<RPN> CalcFunction::operator()(const std::vector<double> &args) {
+    auto rpnc = std::make_unique<RPN>(*rpn);
+
+    for(auto& token : rpnc->stack){
         if(token.type != Token_type::func)
             continue;
 
@@ -27,11 +29,10 @@ double CalcFunction::operator()(const std::vector<double> &args) {
         token = t;
     }
 
-    return calculator->calculate(*rpn);
+    return rpnc;
 }
 
 CalcFunction::CalcFunction(const CalcFunction &calcFunction) {
-    this->calculator = calcFunction.calculator;
     this->arg_num = calcFunction.arg_num;
     this->rpn = std::make_unique<RPN>(*(calcFunction.rpn.get()));
 }

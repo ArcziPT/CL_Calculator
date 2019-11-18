@@ -1,0 +1,2 @@
+all:
+	g++ -o test main.cpp CalcFunction.cpp CalculatorConfig.cpp default_functions.cpp FunctionFactory.cpp RPN_Calculator.cpp RPN_Converter.cpp TextHelper.cpp
